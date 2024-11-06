@@ -1,5 +1,6 @@
 package com.example.plugin.dropdown;
 
+import com.example.plugin.Constant;
 import com.example.plugin.DropDownItemDataSingleton;
 import com.example.plugin.MyPluginUtil;
 import com.example.plugin.beans.DropdownItem;
@@ -37,7 +38,31 @@ public class DropdownPopup {
                         ProgressManager.getInstance().run(new Task.Backgroundable(actionEvent.getProject(), "Packaging " + selectedItem.getText()) {
                             @Override
                             public void run(@NotNull ProgressIndicator indicator) {
-                                MyPluginUtil.executeBat(selectedItem.getText(), Objects.requireNonNull(actionEvent.getProject()), new OnBatExecutedListener() {
+
+                                String projectPath = Objects.requireNonNull(actionEvent.getProject()).getBasePath();
+                                if (projectPath == null) {
+                                    return;
+                                }
+                                projectPath = Constant.ConvertPathForTestMode(projectPath);
+                                String batCommand = "";
+                                if (selectedItem.getCommandType() == Constant.COMMAND_TYPE_SYNC) {
+                                    batCommand = projectPath + "\\test_hvigorw.bat"
+                                            //项目所在盘符
+                                            + " " + (projectPath.length() >= 2 ? projectPath.substring(0, 2) : "")
+                                            //项目根路径
+                                            + " " + projectPath
+                                            //产品名称参数
+                                            + " " + selectedItem.getText();
+                                } else if (selectedItem.getCommandType() == Constant.COMMAND_TYPE_BUILD) {
+                                    batCommand = projectPath + "\\test_hvigorw.bat"
+                                            //项目所在盘符
+                                            + " " + (projectPath.length() >= 2 ? projectPath.substring(0, 2) : "")
+                                            //项目根路径
+                                            + " " + projectPath
+                                            //产品名称参数
+                                            + " " + selectedItem.getText();
+                                }
+                                MyPluginUtil.executeBat(batCommand, new OnBatExecutedListener() {
                                     @Override
                                     public void onBatExecuted(int exitCode, String exitMsg) {
                                         selectedItem.setRunning(false);
@@ -71,13 +96,13 @@ public class DropdownPopup {
             if (value instanceof DropdownItem item) {
                 setText(item.getText());
                 //TODO 修改图标
-                if (item.getCommandType() == 1) {
+                if (item.getCommandType() == Constant.COMMAND_TYPE_SYNC) {
                     if (item.isRunning()) {
-                        setIcon(IconLoader.getIcon("/icons/item_build_running.svg", DropdownPopup.class));
+                        setIcon(IconLoader.getIcon("/icons/item_sync_running.svg", DropdownPopup.class));
                     } else {
-                        setIcon(IconLoader.getIcon("/icons/item_build.svg", DropdownPopup.class));
+                        setIcon(IconLoader.getIcon("/icons/item_sync.svg", DropdownPopup.class));
                     }
-                } else if (item.getCommandType() == 0) {
+                } else if (item.getCommandType() == Constant.COMMAND_TYPE_BUILD) {
                     if (item.isRunning()) {
                         setIcon(IconLoader.getIcon("/icons/item_build_running.svg", DropdownPopup.class));
                     } else {

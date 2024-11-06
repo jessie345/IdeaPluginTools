@@ -1,5 +1,7 @@
 package com.example.plugin.beans;
 
+import com.example.plugin.Constant;
+
 public class DropdownItem {
     private String text;
     //item功能类型：0-普通打包命令 1-同步命令
@@ -9,7 +11,7 @@ public class DropdownItem {
     public DropdownItem(String text, boolean isRunning) {
         this.text = text;
         this.isRunning = isRunning;
-        this.commandType = 0;
+        this.commandType = Constant.COMMAND_TYPE_BUILD;
     }
 
     public DropdownItem(String text, boolean isRunning, int commandType) {

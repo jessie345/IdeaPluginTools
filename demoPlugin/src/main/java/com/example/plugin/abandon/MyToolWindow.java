@@ -2,7 +2,6 @@ package com.example.plugin.abandon;
 
 import com.example.plugin.MyPluginUtil;
 import com.example.plugin.beans.ProductBean;
-import com.example.plugin.interfaces.OnBatExecutedListener;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
@@ -77,20 +76,6 @@ public class MyToolWindow implements ToolWindowFactory {
     }
 
     private static void onProductSelected(@NotNull Project project, List<String> items, JList<String> list) {
-
-        ProgressManager.getInstance().run(new Task.Backgroundable(project, "Packaging " + items.get(list.getSelectedIndex())) {
-            @Override
-            public void run(@NotNull ProgressIndicator indicator) {
-                ApplicationManager.getApplication().invokeLater(list::updateUI);
-                MyPluginUtil.executeBat(items.get(list.getSelectedIndex()), project, new OnBatExecutedListener() {
-                    @Override
-                    public void onBatExecuted(int exitCode, String exitMsg) {
-                        ApplicationManager.getApplication().invokeLater(() -> {
-                            MyPluginUtil.showAlert(project, exitMsg);
-                        });
-                    }
-                });
-            }
-        });
+        MyPluginUtil.showAlert(project, "Packaging " + items.get(list.getSelectedIndex()));
     }
 }

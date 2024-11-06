@@ -23,7 +23,6 @@ import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class MyPluginUtil {
 
@@ -105,9 +104,18 @@ public class MyPluginUtil {
         }
         projectPath = Constant.ConvertPathForTestMode(projectPath);
         String jsonString = MyPluginUtil.readStringFromFile(new File(projectPath + "\\build-profile.json5"));
+
         Gson gson = new Gson();
         ArrayList<ProductBean> yourClassList = null;
         try {
+
+//            Json5 json5 = new Json5();
+//            Json5Element json5Element = json5.parse(Objects.requireNonNull(jsonString));
+//
+//            Json5Object rootObject = json5Element.getAsJson5Object();
+//            Json5Element appElement = rootObject.get("app");
+
+
             yourClassList = (gson.fromJson(jsonString, BuildProfile.class)).getApp().getProducts();
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
@@ -143,27 +151,16 @@ public class MyPluginUtil {
     }
 
     /**
-     * 执行test_hvigorw.bat
+     * 执行bat
      *
-     * @param productName bat所需命令行参数
-     * @param project     project内容
+     * @param batCommand            bat命令
+     * @param onBatExecutedListener bat命令完成回调
      */
-    public static void executeBat(String productName, Project project, OnBatExecutedListener onBatExecutedListener) {
-        String projectPath = project.getBasePath();
-        if (projectPath == null) {
-            return;
-        }
-        projectPath = Constant.ConvertPathForTestMode(projectPath);
-        String batFilePath = projectPath + "\\test_hvigorw.bat"
-                //项目所在盘符
-                + " " + (projectPath.length() >= 2 ? projectPath.substring(0, 2) : "")
-                //项目根路径
-                + " " + projectPath
-                //产品名称参数
-                + " " + productName;
+    public static void executeBat(String batCommand, OnBatExecutedListener onBatExecutedListener) {
+
         try {
             // 创建Runtime实例并执行.bat文件
-            Process process = Runtime.getRuntime().exec(batFilePath);
+            Process process = Runtime.getRuntime().exec(batCommand);
             // 等待进程完成
             int exitCode = process.waitFor();
             // 打印进程的退出代码
