@@ -1,0 +1,40 @@
+<idea-plugin>
+    <id>com.example.plugin</id>
+    <name>MyPlugin</name>
+    <version>1.0.0</version>
+    <vendor email="developer@example.com" url="https://example.com">My Company</vendor>
+
+    <!-- 定义插件的扩展点和功能 -->
+    <extensions defaultExtensionNs="com.intellij">
+        <notificationGroup id="MyPackageNotify" displayType="BALLOON"/>
+        <!--        <toolWindow id="MyToolWindow" factoryClass="com.example.plugin.abandon.MyToolWindow"/>-->
+    </extensions>
+
+    <actions>
+        <action id="DropdownAction"
+                class="com.example.plugin.dropdown.DropdownAction"
+                text="选择产品进行打包"
+                icon="AllIcons.Actions.RunAll"
+                description="Show product dropdown list">
+            <add-to-group group-id="ToolbarRunGroup" anchor="first"/>
+        </action>
+
+        <action id="CreateResStackAction"
+                class="com.example.plugin.generate.CreateResStackAction"
+                text="通用资源文件夹"
+                icon="AllIcons.Actions.AddList"
+                description="Create resource folders">
+            <add-to-group group-id="NewGroup" anchor="first"/>
+        </action>
+
+        <!--                        <action id="MyTestAction"-->
+        <!--                                class="com.example.plugin.abandon.ReadProductAction"-->
+        <!--                                text="产品json查看"-->
+        <!--                                icon="AllIcons.Actions.GeneratedFolder"-->
+        <!--                                description="Test package building">-->
+        <!--                            <add-to-group group-id="ToolsMenu" anchor="last"/>-->
+        <!--                        </action>-->
+    </actions>
+    <!-- 定义插件的依赖 -->
+    <depends>com.intellij.modules.platform</depends>
+</idea-plugin>
